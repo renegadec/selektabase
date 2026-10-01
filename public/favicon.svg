@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Selekta Base">
+  <defs>
+    <linearGradient id="red" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff2231" />
+      <stop offset="1" stop-color="#a80714" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0b0c10" />
+  <rect x="3.25" y="3.25" width="57.5" height="57.5" rx="11.5" fill="none" stroke="url(#red)" stroke-width="2.5" />
+  <path d="M6 45h52v7H6z" fill="#ffb703" />
+  <path d="M6 45h7l7 7h-7zM20 45h7l7 7h-7zM34 45h7l7 7h-7zM48 45h7l7 7h-7z" fill="#0b0c10" />
+  <text
+    x="32"
+    y="37"
+    text-anchor="middle"
+    font-family="Impact, 'Arial Narrow', sans-serif"
+    font-size="31"
+    letter-spacing="1"
+    fill="#f4f5f7"
+  >SB</text>
+</svg>
