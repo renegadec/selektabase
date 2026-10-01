@@ -3,17 +3,13 @@
 Official website for **Selekta Base Blowout Festival** — Zimbabwe's premier motorsport, music and
 car-lifestyle festival. *A Celebration of Car Culture, Music, and Lifestyle.*
 
-> **Status: holding page.** The site currently ships a single "under construction" landing page —
-> a full-screen YouTube background loop of the Blowout Festival documentary with construction-themed
-> motion graphics on top. The full multi-section site (tickets, experience grid, sponsorship portal,
-> exhibitor registration, gallery) is still to be built.
-
 ## Stack
 
-- **React 19** + **TypeScript** + **Vite**
-- Hand-written CSS (no framework) — tokens in `src/index.css`, layout/components in `src/App.css`
-- Fonts: **Neuropol** (brand/display) + **Poppins** (body copy and contact bar), both self-hosted —
-  no third-party font requests
+- **React 19** + **TypeScript** + **Vite**, routed with **React Router 7**
+- Hand-written CSS (no framework): tokens in `src/index.css`, hero/video in `src/App.css`,
+  site chrome and UI primitives in `src/styles/site.css`
+- Fonts self-hosted, no third-party font requests: **Neuropol** (brand/display, CC0) and
+  **Poppins** (body copy + contact, OFL 1.1)
 
 ## Getting started
 
@@ -22,115 +18,93 @@ npm install
 npm run dev        # http://localhost:5173
 ```
 
-Other scripts:
-
 ```bash
-npm run build      # type-check and production build into dist/
+npm run build      # tsc -b && vite build  → dist/
 npm run preview    # serve the production build
 npm run lint       # oxlint
 ```
 
+## Routes
+
+| Route | Page | Contents |
+|---|---|---|
+| `/` | Home | Video hero, CTAs, stats, three pillars, legacy teaser, sponsorship teaser |
+| `/about` | About / The Legacy | The Selekta Base story, impact pillars, audience data |
+| `/experience` | The Experience | Three pillars with their full attraction lists |
+| `/tickets` | Tickets | General Access / VIP / VVIP + interest form |
+| `/sponsorship` | Sponsorship | Diamond / Gold / Silver tiers, booth packages, enquiry form |
+| `/exhibitors` | Exhibitors | Booth packages + vendor registration form |
+| `/gallery` | Gallery | Embedded aftermovie + photo grid |
+| `/contact` | Contact | Venue, office, direct contacts, socials, map, message form |
+| `*` | 404 | Recovery links |
+
 ## Project structure
 
 ```
-index.html                    document head, fonts, meta/OG tags
-public/fonts/                 self-hosted webfonts (+ licence notes)
+public/
+  fonts/                      self-hosted webfonts + licences
+  _redirects                  SPA fallback for Netlify / Cloudflare Pages
 src/
-  App.tsx                     holding-page composition
-  App.css                     layout + component styles and animations
-  index.css                   @font-face, design tokens, reset, global type
-  data/event.ts               brand, contact, media and attraction constants
+  App.tsx                     router
+  App.css                     hero, video background, wordmark, socials
+  index.css                   @font-face, design tokens, reset
+  styles/site.css             header, nav, footer, sections, cards, forms
+  layouts/SiteLayout.tsx      shared chrome (header + outlet + footer)
+  pages/                      one file per route
   components/
-    YouTubeBackground.tsx     cover-scaled, chrome-free YouTube loop + poster fallback
-    BrandMark.tsx             text-only wordmark lockup
-    GearRings.tsx             rotating gear rings behind the headline
-    SocialLinks.tsx           circular icon links (inline SVG, no icon library)
-    Sparks.tsx                drifting ember particles
-    Ticker.tsx                infinite marquee of festival attractions
-    ContactBar.tsx            venue, office, phone and email strip
+    SiteHeader.tsx            sticky nav + mobile drawer
+    SiteFooter.tsx            explore / contact / office columns
+    PageHero.tsx              shared inner-page masthead
+    Section.tsx               shared section wrapper
+    EnquiryForm.tsx           reusable form (see Forms below)
+    SocialLinks.tsx           circular icon links
+    YouTubeBackground.tsx     hero video background
+  data/
+    event.ts                  brand, contact, media, edition
+    navigation.ts             nav links and CTAs
+    experience.ts             experience pillars + impact pillars
+    sponsorship.ts            tiers + booth packages
+    tickets.ts                ticket tiers
+    gallery.ts                gallery media
+    site.ts                   form endpoint, shared stats
 docs/BLOWOUT_BRIEF.md         full client business brief (source of truth for content)
 ```
 
-## Fonts
+## Content still needed from the client
 
-Two self-hosted families, deliberately split:
+The site renders cleanly without these — each has a deliberate "pending" state rather than an
+invented value — but they should be filled in before launch:
 
-| Token | Family | Used for |
+| What | Where to set it | Current state |
 |---|---|---|
-| `--font-tech` | `'Ethnocentric' → 'Neuropol'` | Wordmark, headline, chips, status pill, stat figures, progress labels, ticker |
-| `--font-ui` | `'Poppins'` | Description paragraph and the whole contact bar |
+| Event dates | `NEXT_EDITION.dateLabel` / `doorsLabel` in `src/data/event.ts` | "Date to be announced" |
+| Ticket pricing | `price` on each tier in `src/data/tickets.ts` | "Announced soon" |
+| Gallery photos | `GALLERY_PHOTOS` in `src/data/gallery.ts` (add a `src`) | Labelled placeholder tiles |
+| Sponsorship deck PDF | Drop the PDF in `public/` and set `SPONSOR_DECK_URL` in `src/data/event.ts` | "Available on request" |
+| Instagram account | Confirm `@blowout_festival_zimbabwe` exists | Unverified (see Social links) |
 
-Poppins (SIL OFL 1.1, latin subset, weights 300/400/500) carries running copy because the techno
-face is built for display, not paragraphs. Neuropol is **CC0 public domain** (Typodermic / Ray
-Larabie), so it is free to embed commercially. Licences and sources:
-[`public/fonts/README.md`](public/fonts/README.md).
+## Forms
 
-The brand font requested was **Ethnocentric**. Its Typodermic Desktop Licence is free for logos
-and static graphics but **explicitly excludes webfont embedding**, so it cannot legally be served
-as a live webfont without an extra licence — and it isn't in Typodermic's CC0 set. Neuropol is the
-closest license-clean match: same foundry, same designer, same genre. `'Ethnocentric'` sits first
-in the stack, so:
+Every form goes through **`src/components/EnquiryForm.tsx`**, which has two modes:
 
-1. Buy a webfont/embedding licence — [MyFonts](https://www.myfonts.com/collections/ethnocentric-font-typodermic)
-   or [Font Bros](https://www.fontbros.com/families/ethnocentric).
-2. Save the file as `public/fonts/ethnocentric.woff2`.
-3. Done — it takes over automatically, no code change.
+- **Default (no backend):** composes the answers into a pre-filled email draft addressed to
+  `FORM_RECIPIENT`. Works today with zero infrastructure.
+- **Wired up:** set `FORM_ENDPOINT` in `src/data/site.ts` to a form service (Formspree, Web3Forms,
+  your own API) and every form POSTs JSON to it instead, reporting success inline.
 
-Until then the browser logs a harmless 404 for that file and falls back to Neuropol.
+## Deployment
 
-## Social links
+The app is a single-page app, so the host must fall back to `index.html` for unknown paths or deep
+links will 404. A `public/_redirects` file covering Netlify and Cloudflare Pages is included.
 
-Rendered as **circular icon links directly below the headline figures** (10 / 7,000+ / All day),
-driven by the `SOCIALS` array in `src/data/event.ts`. Add or remove a platform there, and add a
-matching glyph to `ICON_PATHS` in [`SocialLinks.tsx`](src/components/SocialLinks.tsx).
-
-Icons are inlined SVG paths from [Simple Icons](https://simpleicons.org/) (CC0 1.0), so they add
-no network requests and no icon-library dependency.
-
-| Platform | Destination | Status |
-|---|---|---|
-| Instagram | `@blowout_festival_zimbabwe` | Handle supplied by the client |
-| Facebook | `facebook.com/selektabase263` → "Selekta Base Worldwide" | Verified |
-| X | `x.com/selektabase` → "Selekta Base (@selektabase)" | Verified |
-
-The **YouTube channel is deliberately omitted** at the client's request. Each link is a 44×44px
-touch target with an `aria-label` carrying the platform and handle.
-
-## The background video
-
-The hero loop is a YouTube embed, not a hosted video file, and it plays only the **0:03 → 1:12**
-excerpt of the documentary.
-
-`YouTubeBackground`:
-
-- drives the player through the **YouTube IFrame API** rather than URL parameters, because
-  `start`/`end` in an embed URL are honoured on the *first pass only* — after that playback runs
-  straight past `end`. The component polls `getCurrentTime()` and seeks back to the segment start,
-  which loops the excerpt reliably (verified over repeated cycles).
-- cover-scales the iframe to any viewport (`100vw × 56.25vw` plus min-size guards) and applies
-  `pointer-events: none` so YouTube's hover chrome and title bar never appear,
-- **holds the poster frame until 7s after playback starts**, then fades the player in. YouTube
-  paints its own title bar and a large centre play/pause button over the video for the first few
-  seconds, and nothing inside a cross-origin iframe can be styled away — so the player stays
-  transparent until that overlay has cleared. Measured clear time is 3–6s after playback begins;
-  shortening `REVEAL_DELAY_MS` makes the pause button visible on the live site.
-- is `aria-hidden` and removed from the tab order since it is purely decorative.
-
-Swap the video or the excerpt without touching code by copying `.env.example` to `.env.local`:
-
-```bash
-VITE_YOUTUBE_VIDEO_ID=0sI0__vvU6I
-VITE_YOUTUBE_START=3     # 0:03
-VITE_YOUTUBE_END=72      # 1:12
-```
-
-If the IFrame API or the embed cannot load, the poster frame (`i.ytimg.com`) still fills the
-background.
+- **Vercel:** add `{ "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }` to `vercel.json`
+- **nginx:** `try_files $uri $uri/ /index.html;`
+- **Apache:** a `.htaccess` rewrite to `index.html`
 
 ## Notes
 
-- All content lives in `src/data/event.ts` — update it alongside `docs/BLOWOUT_BRIEF.md` when
-  brand facts change.
+- One typeface carries the brand (`--font-tech`) and Poppins handles running copy and the contact
+  area; see [`public/fonts/README.md`](public/fonts/README.md) for the Ethnocentric licensing
+  situation and the zero-code upgrade path.
+- Social links are data-driven from `SOCIALS` in `src/data/event.ts`.
 - Decorative motion is CSS-only and disabled under `prefers-reduced-motion: reduce`.
-- The holding page intentionally avoids announcing a date or ticket pricing; those are open
-  questions with the client (see the brief, section 9).

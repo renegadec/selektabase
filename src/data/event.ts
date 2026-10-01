@@ -27,6 +27,25 @@ export const CONTACT = {
 } as const
 
 /**
+ * The next edition.
+ *
+ * Dates have not been supplied yet — `null` renders as "To be announced" rather
+ * than inventing a date. Set `dateLabel` (and optionally `doorsLabel`) and every
+ * page picks it up.
+ */
+export const NEXT_EDITION = {
+  /** e.g. 'Saturday 27 December 2026' */
+  dateLabel: null as string | null,
+  /** e.g. 'Gates open 10:00' */
+  doorsLabel: null as string | null,
+  venue: EVENT.venue,
+  city: EVENT.city,
+} as const
+
+/** Sponsorship deck PDF. Upload to `public/` and set the path, e.g. '/blowout-sponsorship-deck.pdf'. */
+export const SPONSOR_DECK_URL: string | null = null
+
+/**
  * Social profiles rendered as icon links beneath the headline figures.
  *
  * `icon` selects a glyph from `SOCIALS_ICONS` in `components/SocialLinks.tsx`.
