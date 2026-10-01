@@ -1,8 +1,8 @@
-import type { CSSProperties } from 'react'
 import './App.css'
 import BrandMark from './components/BrandMark'
 import ContactBar from './components/ContactBar'
 import GearRings from './components/GearRings'
+import SocialLinks from './components/SocialLinks'
 import Sparks from './components/Sparks'
 import Ticker from './components/Ticker'
 import YouTubeBackground from './components/YouTubeBackground'
@@ -76,10 +76,7 @@ export default function App() {
               <span className="progress__value">{BUILD_PROGRESS}%</span>
             </div>
             <div className="progress__track">
-              <span
-                className="progress__fill"
-                style={{ '--value': `${BUILD_PROGRESS}%` } as CSSProperties}
-              />
+              <span className="progress__fill" style={{ width: `${BUILD_PROGRESS}%` }} />
             </div>
           </div>
 
@@ -91,6 +88,8 @@ export default function App() {
               </li>
             ))}
           </ul>
+
+          <SocialLinks />
         </main>
       </div>
 

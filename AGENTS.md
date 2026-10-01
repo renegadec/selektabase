@@ -16,8 +16,8 @@ motorsport, music and car-lifestyle festival).
 
 Shipped: a temporary "under construction" holding page — full-screen YouTube background loop
 (0:03 → 1:12 excerpt), construction-themed motion graphics (rotating gear rings, drifting embers,
-gear/ticker motion), a text-only wordmark, build-progress meter and a contact bar.
-The full multi-section site has **not** been built yet.
+ticker motion), a text-only wordmark, a flat build-progress meter, headline figures, a social icon
+row and a contact bar. The full multi-section site has **not** been built yet.
 
 ## Conventions
 
@@ -35,9 +35,12 @@ The full multi-section site has **not** been built yet.
   tracking tight — tighten further, never loosen. The wordmark is sized in `vw` to stay on one
   line; re-measure across 320–1920px before changing it. No `nowrap`, so a wider cut of the brand
   font wraps instead of overflowing.
-- **Social profiles are data-driven** — `SOCIALS` in `src/data/event.ts`. Add or remove a platform
-  there and the contact bar re-renders; don't hard-code links in components. Only ship URLs that
-  actually resolve.
+- **Social profiles are data-driven** — `SOCIALS` in `src/data/event.ts`, rendered as circular icon
+  links under the headline figures by `components/SocialLinks.tsx`. Adding a platform means adding
+  a matching glyph to `ICON_PATHS` there. Don't hard-code links in components, and only ship URLs
+  that actually resolve (the YouTube channel is intentionally excluded).
+- The build-progress bar is a **flat solid fill, deliberately un-animated** — width is set inline
+  from `BUILD_PROGRESS`. Don't reintroduce a gradient, shimmer or keyframe animation.
 - The hero video is driven by the **YouTube IFrame API** and loops a segment (0:03 → 1:12).
   Embed URL `start`/`end` alone are **not** enough — they apply to the first pass only.
 - Keep decorative motion CSS-only, always behind `prefers-reduced-motion` handling.

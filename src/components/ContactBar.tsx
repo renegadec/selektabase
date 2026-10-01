@@ -1,8 +1,8 @@
-import { CONTACT, EVENT, SOCIALS } from '../data/event'
+import { CONTACT, EVENT } from '../data/event'
 
 const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, '')}`
 
-/** Persistent strip of venue, contact details and social profiles. */
+/** Persistent strip of venue, office and direct contact details. */
 export default function ContactBar() {
   return (
     <div className="contact">
@@ -27,26 +27,6 @@ export default function ContactBar() {
         <span className="contact__label">Office</span>
         {CONTACT.office}
       </p>
-
-      <div className="contact__follow">
-        <span className="contact__label">Follow</span>
-        <ul className="contact__socials">
-          {SOCIALS.map((social) => (
-            <li key={social.label}>
-              <a
-                className="contact__social"
-                href={social.url}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`${social.label} — ${social.handle}`}
-              >
-                <span className="contact__social-name">{social.label}</span>
-                <span className="contact__social-handle">{social.handle}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
     </div>
   )
 }

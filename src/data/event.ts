@@ -27,36 +27,35 @@ export const CONTACT = {
 } as const
 
 /**
- * Social profiles.
+ * Social profiles rendered as icon links beneath the headline figures.
  *
+ * `icon` selects a glyph from `SOCIALS_ICONS` in `components/SocialLinks.tsx`.
  * `url` values are real, checked destinations:
  *  - Instagram  — handle supplied by the client in the brand brief
  *  - Facebook   — verified: facebook.com/selektabase263 resolves to "Selekta Base Worldwide"
  *  - X          — verified: x.com/selektabase resolves to "Selekta Base (@selektabase)"
- *  - YouTube    — verified: the channel that publishes the Blowout Festival documentaries
  *
- * Add platforms here and they render automatically in the contact bar.
+ * The YouTube channel is deliberately omitted (client request). Add platforms
+ * here and they render automatically, provided a matching icon exists.
  */
 export const SOCIALS = [
   {
     label: 'Instagram',
     handle: '@blowout_festival_zimbabwe',
+    icon: 'instagram',
     url: 'https://www.instagram.com/blowout_festival_zimbabwe/',
   },
   {
     label: 'Facebook',
     handle: 'Selekta Base Worldwide',
+    icon: 'facebook',
     url: 'https://www.facebook.com/selektabase263/',
   },
   {
     label: 'X',
     handle: '@selektabase',
+    icon: 'x',
     url: 'https://x.com/selektabase',
-  },
-  {
-    label: 'YouTube',
-    handle: '@selektabase5986',
-    url: 'https://www.youtube.com/@selektabase5986',
   },
 ] as const
 

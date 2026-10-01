@@ -44,9 +44,10 @@ src/
     YouTubeBackground.tsx     cover-scaled, chrome-free YouTube loop + poster fallback
     BrandMark.tsx             text-only wordmark lockup
     GearRings.tsx             rotating gear rings behind the headline
+    SocialLinks.tsx           circular icon links (inline SVG, no icon library)
     Sparks.tsx                drifting ember particles
     Ticker.tsx                infinite marquee of festival attractions
-    ContactBar.tsx            venue, phone, email and social strip
+    ContactBar.tsx            venue, office, phone and email strip
 docs/BLOWOUT_BRIEF.md         full client business brief (source of truth for content)
 ```
 
@@ -79,15 +80,21 @@ Until then the browser logs a harmless 404 for that file and falls back to Neuro
 
 ## Social links
 
-Driven by the `SOCIALS` array in `src/data/event.ts` — add or remove a platform there and the
-contact bar re-renders. All four shipped URLs were checked to resolve:
+Rendered as **circular icon links directly below the headline figures** (10 / 7,000+ / All day),
+driven by the `SOCIALS` array in `src/data/event.ts`. Add or remove a platform there, and add a
+matching glyph to `ICON_PATHS` in [`SocialLinks.tsx`](src/components/SocialLinks.tsx).
+
+Icons are inlined SVG paths from [Simple Icons](https://simpleicons.org/) (CC0 1.0), so they add
+no network requests and no icon-library dependency.
 
 | Platform | Destination | Status |
 |---|---|---|
 | Instagram | `@blowout_festival_zimbabwe` | Handle supplied by the client |
 | Facebook | `facebook.com/selektabase263` → "Selekta Base Worldwide" | Verified |
 | X | `x.com/selektabase` → "Selekta Base (@selektabase)" | Verified |
-| YouTube | `@selektabase5986` | Verified — channel that publishes the Blowout documentaries |
+
+The **YouTube channel is deliberately omitted** at the client's request. Each link is a 44×44px
+touch target with an `aria-label` carrying the platform and handle.
 
 ## The background video
 
