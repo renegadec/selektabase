@@ -27,7 +27,7 @@ row and a contact bar. The full multi-section site has **not** been built yet.
   (`--amber`), bold wide techno type. Use the existing CSS custom properties rather than new
   hard-coded colours.
 - **Two typefaces, by design.** `--font-tech` (`'Ethnocentric' → 'Neuropol'`) carries the brand —
-  wordmark, headline, chips, status pill, stats, progress labels, ticker. `--font-ui`
+  wordmark, headline, status pill, stats, progress labels, ticker. `--font-ui`
   (`'Poppins'`) is reserved for running copy (`.lede`) and the whole contact bar, where the wide
   techno face is unreadable at small/paragraph sizes. Don't spread Poppins past those areas, and
   don't put the techno face back on body copy. Both faces are self-hosted in `public/fonts/` —
@@ -43,6 +43,12 @@ row and a contact bar. The full multi-section site has **not** been built yet.
   from `BUILD_PROGRESS`. Don't reintroduce a gradient, shimmer or keyframe animation.
 - The hero video is driven by the **YouTube IFrame API** and loops a segment (0:03 → 1:12).
   Embed URL `start`/`end` alone are **not** enough — they apply to the first pass only.
+- The player stays at `opacity: 0` until **7s after the first `PLAYING` event**
+  (`REVEAL_DELAY_MS`). This is deliberate: YouTube paints its own title bar and a large centre
+  play/pause button over the video for the first few seconds of playback, and nothing inside the
+  cross-origin iframe can be styled away. Holding the poster frame until that overlay clears is
+  the only reliable way to hide it. **Do not shorten this delay** — shortening it makes the pause
+  button visible on the live site.
 - Keep decorative motion CSS-only, always behind `prefers-reduced-motion` handling.
 - Every component lives in `src/components/`; brand/event content comes from `src/data/event.ts`.
 

@@ -109,7 +109,11 @@ excerpt of the documentary.
   which loops the excerpt reliably (verified over repeated cycles).
 - cover-scales the iframe to any viewport (`100vw × 56.25vw` plus min-size guards) and applies
   `pointer-events: none` so YouTube's hover chrome and title bar never appear,
-- fades in over the static poster frame once the player is ready,
+- **holds the poster frame until 7s after playback starts**, then fades the player in. YouTube
+  paints its own title bar and a large centre play/pause button over the video for the first few
+  seconds, and nothing inside a cross-origin iframe can be styled away — so the player stays
+  transparent until that overlay has cleared. Measured clear time is 3–6s after playback begins;
+  shortening `REVEAL_DELAY_MS` makes the pause button visible on the live site.
 - is `aria-hidden` and removed from the tab order since it is purely decorative.
 
 Swap the video or the excerpt without touching code by copying `.env.example` to `.env.local`:

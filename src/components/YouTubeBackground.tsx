@@ -43,6 +43,12 @@ declare global {
 
 const API_SRC = 'https://www.youtube.com/iframe_api'
 
+/** How long to keep the player hidden after playback starts, so YouTube's own
+ *  startup overlay (title bar + centre play/pause button) has cleared. */
+const REVEAL_DELAY_MS = 7000
+/** Reveal regardless if the playing event never arrives. */
+const REVEAL_FALLBACK_MS = 20000
+
 let apiPromise: Promise<YTNamespace> | null = null
 
 /** Loads the YouTube IFrame API once and resolves with the `YT` namespace. */
@@ -100,6 +106,7 @@ export default function YouTubeBackground({
     let disposed = false
     let player: YTPlayer | null = null
     let pollId: number | undefined
+    let revealId: number | undefined
 
     const stopPolling = () => {
       if (pollId !== undefined) {
@@ -108,11 +115,23 @@ export default function YouTubeBackground({
       }
     }
 
-    // Safety net: the background must never stay hidden just because a ready
-    // callback was missed. Better to reveal the player than show nothing.
-    const readyFallback = window.setTimeout(() => {
-      if (!disposed) setReady(true)
-    }, 6000)
+    /**
+     * YouTube paints its own startup UI over the video — a title bar and a large
+     * centre play/pause button — and only clears it a few seconds *after*
+     * playback begins. We can't touch anything inside the cross-origin iframe,
+     * so instead the player stays fully transparent until that overlay has gone,
+     * leaving the clean poster frame on screen. Measured clear time is 3-6s after
+     * playback starts; we wait longer to be safe.
+     */
+    const scheduleReveal = (delay: number) => {
+      if (revealId !== undefined) window.clearTimeout(revealId)
+      revealId = window.setTimeout(() => {
+        if (!disposed) setReady(true)
+      }, delay)
+    }
+
+    // Safety net: never leave the background hidden if the playing event is missed.
+    scheduleReveal(REVEAL_FALLBACK_MS)
 
     loadYouTubeApi()
       .then((YT) => {
@@ -150,7 +169,6 @@ export default function YouTubeBackground({
               event.target.mute()
               event.target.seekTo(start, true)
               event.target.playVideo()
-              setReady(true)
 
               if (end === undefined) return
 
@@ -165,8 +183,9 @@ export default function YouTubeBackground({
             },
             onStateChange: (event) => {
               if (disposed) return
-              // 1 = playing — the most direct proof the background is running.
-              if (event.data === 1) setReady(true)
+              // 1 = playing. This is when YouTube starts its overlay countdown,
+              // so the reveal is timed from here rather than from onReady.
+              if (event.data === 1) scheduleReveal(REVEAL_DELAY_MS)
               // 0 = ended, 2 = paused — keep the background running regardless.
               if (event.data === 0) {
                 event.target.seekTo(start, true)
@@ -184,7 +203,7 @@ export default function YouTubeBackground({
 
     return () => {
       disposed = true
-      window.clearTimeout(readyFallback)
+      if (revealId !== undefined) window.clearTimeout(revealId)
       stopPolling()
       try {
         player?.destroy()

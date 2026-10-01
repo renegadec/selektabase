@@ -29,10 +29,6 @@ export default function App() {
       <div className="stage">
         <header className="topbar">
           <BrandMark />
-          <div className="topbar__meta">
-            <span className="chip chip--red">{EVENT.edition}</span>
-            <span className="chip chip--city">{EVENT.city}</span>
-          </div>
         </header>
 
         <main className="hero">
