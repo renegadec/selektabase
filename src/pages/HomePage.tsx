@@ -29,7 +29,8 @@ export default function HomePage() {
           <h1 className="wordmark">
             <span className="wordmark__kicker">{EVENT.brand}</span>{' '}
             <span className="wordmark__main" data-text="Blowout Festival">
-              Blowout Festival
+              <span className="wordmark__word">Blowout</span>{' '}
+              <span className="wordmark__word">Festival</span>
             </span>
           </h1>
 

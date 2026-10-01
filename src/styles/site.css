@@ -1039,3 +1039,61 @@ select.field__control {
     display: none;
   }
 }
+
+/* ------------------------------------------------- mobile ergonomics ---
+   Two problems measured at 390px: several label styles resolved to under
+   10px (their clamp() floors are too low for a phone), and inline links had
+   hit areas of only 17–22px against the 24px WCAG 2.5.8 minimum. Raise the
+   floors and pad the small links so they are comfortably tappable. */
+
+@media (max-width: 640px) {
+  .eyebrow,
+  .card__eyebrow,
+  .card__flag,
+  .tier-strip__note,
+  .field__label,
+  .contact-block__title,
+  .site-footer__heading,
+  .site-footer__wordmark span,
+  .photo-tile__label {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+  }
+
+  .btn,
+  .btn--sm {
+    font-size: 0.76rem;
+  }
+
+  .tag {
+    font-size: 0.78rem;
+  }
+
+  .photo-tile__hint {
+    font-size: 0.76rem;
+  }
+
+  .site-footer__nav a,
+  .site-footer__contact a,
+  .site-footer__contact li,
+  .site-footer__office p {
+    font-size: 0.92rem;
+  }
+
+  /* The header row is already 44px tall (the toggle), so padding the brand
+     widens its hit area without changing the header height. */
+  .site-header .brand {
+    padding-block: 10px;
+  }
+
+  .site-footer__nav a,
+  .site-footer__contact a,
+  .contact-block a {
+    display: inline-block;
+    padding-block: 6px;
+  }
+
+  .link-arrow {
+    padding-block: 4px;
+  }
+}

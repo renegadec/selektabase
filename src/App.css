@@ -473,3 +473,79 @@ and left
 .home-hero .lede {
   max-width: 56ch;
 }
+
+/* ------------------------------------------------ home hero — mobile ---
+   The wordmark is a single line on desktop, which forces it tiny on a phone
+   (it was rendering at 23px — smaller than the body copy). Below 640px the
+   two words stack so the headline can be roughly twice the size. */
+
+@media (max-width: 640px) {
+  .home-hero {
+    min-height: auto;
+  }
+
+  .home-hero__inner {
+    gap: 14px;
+    padding-block: clamp(34px, 6vh, 56px) clamp(38px, 7vh, 64px);
+  }
+
+  .home-hero .eyebrow {
+    font-size: 0.64rem;
+    letter-spacing: 0.13em;
+  }
+
+  .wordmark__kicker {
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* Two explicit lines, so the size no longer depends on fitting one line. */
+  .wordmark__word {
+    display: block;
+  }
+
+  .wordmark__main {
+    font-size: clamp(1.95rem, 11.5vw, 3.4rem);
+    line-height: 1.04;
+  }
+
+  /* The chromatic tear is a single-line effect and would misalign on two. */
+  .wordmark__main::before,
+  .wordmark__main::after {
+    display: none;
+  }
+
+  .home-hero .tagline {
+    font-size: 0.8rem;
+  }
+
+  .home-hero .lede {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  /* Four stats stacked into an even 2x2 block instead of a ragged column. */
+  .home-hero .facts {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 14px;
+    margin-top: 4px;
+  }
+
+  .home-hero .facts__item {
+    align-items: flex-start;
+    gap: 4px;
+    padding: 0;
+  }
+
+  .home-hero .facts__item strong {
+    font-size: 1.22rem;
+  }
+
+  .home-hero .facts__item span {
+    font-size: 0.7rem;
+    line-height: 1.35;
+    text-align: left;
+  }
+}
